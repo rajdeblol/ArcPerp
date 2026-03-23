@@ -11,6 +11,7 @@ import {
 } from "@solana/wallet-adapter-react";
 import { WalletModalProvider, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import "@solana/wallet-adapter-react-ui/styles.css";
 
 import type { EncryptedOrder } from "./lib/encryptOrder";
 import { resolveMxePublicKey } from "./lib/encryptOrder";
@@ -137,12 +138,12 @@ function AppBody(): ReactElement {
       return;
     }
 
-    if (!isAdminWallet) {
-      setStatus("Demo is admin-only. Connect the organizer wallet to trade.");
+    if (isAdminWallet) {
+      setStatus("Admin wallet connected. Ready to submit encrypted orders.");
       return;
     }
 
-    setStatus("Admin wallet connected. Ready to submit encrypted orders.");
+    setStatus("Wallet connected. Submit is enabled; non-admin orders will be rejected on-chain.");
   }, [isAdminWallet, marketAdmin, wallet.publicKey]);
 
   const refreshTraderState = useCallback(async (): Promise<void> => {
@@ -174,11 +175,6 @@ function AppBody(): ReactElement {
       setStatus("Connect wallet before submitting orders");
       return;
     }
-    if (!isAdminWallet) {
-      setStatus("Demo is admin-only. Connect the organizer wallet to trade.");
-      return;
-    }
-
     setStatus("Submitting encrypted order on-chain...");
 
     try {
@@ -343,7 +339,8 @@ function AppBody(): ReactElement {
               traderPubkey={wallet.publicKey?.toBase58() ?? "disconnected"}
               mxePublicKey={mxePublicKey}
               onEncryptedSubmit={handleEncryptedSubmit}
-              canSubmit={isAdminWallet}
+              canSubmit={Boolean(wallet.publicKey)}
+              disabledReason="Connect wallet to submit encrypted orders."
             />
             <LiquidationWarning isUnderwater={isUnderwater} />
           </div>
