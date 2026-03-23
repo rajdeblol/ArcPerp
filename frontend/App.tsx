@@ -12,9 +12,9 @@ import {
 import { WalletModalProvider, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 
-import type { EncryptedOrder } from "../client/encryptOrder";
-import { resolveMxePublicKey } from "../client/encryptOrder";
-import { submitOrder } from "../client/submitOrder";
+import type { EncryptedOrder } from "./lib/encryptOrder";
+import { resolveMxePublicKey } from "./lib/encryptOrder";
+import { submitOrder } from "./lib/submitOrder";
 import { LiquidationWarning } from "./components/LiquidationWarning";
 import { OrderForm } from "./components/OrderForm";
 import { Portfolio } from "./components/Portfolio";

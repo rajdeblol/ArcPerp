@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import { useState } from "react";
 
-import { encryptOrder, type EncryptedOrder, type OrderDirection } from "../../client/encryptOrder";
+import { encryptOrder, type EncryptedOrder, type OrderDirection } from "../lib/encryptOrder";
 
 interface Props {
   traderPubkey: string;
