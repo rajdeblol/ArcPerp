@@ -311,7 +311,17 @@ function AppBody(): ReactElement {
       <section className="app-panel" id="app">
         <div className="app-head">
           <h3>ArcPerp App</h3>
-          <WalletMultiButton />
+          <div className="app-head-actions">
+            <a
+              className="faucet-btn"
+              href="https://faucet.solana.com/?cluster=devnet"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Get Devnet SOL
+            </a>
+            <WalletMultiButton />
+          </div>
         </div>
 
         <div className="metric-row">
