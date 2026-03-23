@@ -1,9 +1,10 @@
 .env
 .env.*
 *.key
-*.json
-!vercel.json
+*id.json
+# Automatically generated configuration files must not be ignored
 !frontend/vercel.json
+!vercel.json
 node_modules/
 dist/
 target/
