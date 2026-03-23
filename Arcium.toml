@@ -1,0 +1,18 @@
+[project]
+name = "private_perps"
+network = "solana-devnet"
+
+[circuits]
+match_orders = "circuits/match_orders.rs"
+update_position = "circuits/update_position.rs"
+check_liquidation = "circuits/check_liquidation.rs"
+
+[privacy]
+no_plaintext_orders = true
+masked_conditionals_required = true
+only_reveal_final_pnl_and_match_events = true
+
+[clusters]
+
+[clusters.devnet]
+offset = 42

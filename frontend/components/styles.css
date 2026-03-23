@@ -1,0 +1,478 @@
+:root {
+  --bg-deep: #04231c;
+  --ink: #0f1f3a;
+  --muted: #4b5d79;
+  --panel: #edeff3;
+  --card: #f4f6fa;
+  --line: #d8dfec;
+  --navy: #081b43;
+  --navy-soft: #223153;
+  --mint: #90f2ba;
+  --accent: #0d244d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 20% 20%, #0b4e3f 0%, transparent 36%),
+    radial-gradient(circle at 80% 18%, #0a3a31 0%, transparent 30%),
+    linear-gradient(180deg, #022d24 0%, #031f19 65%, #021914 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.landing-shell {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 1.25rem auto 2.2rem;
+}
+
+.top-panel,
+.info-panel,
+.app-panel {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 2rem;
+  padding: 1.55rem;
+  box-shadow: 0 20px 44px rgba(6, 22, 36, 0.16);
+}
+
+.info-panel,
+.app-panel {
+  margin-top: 1rem;
+}
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  margin: 0;
+  font-family: "Sora", "Manrope", sans-serif;
+  font-size: clamp(2rem, 2.7vw, 2.45rem);
+}
+
+.nav-row nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.nav-row nav a {
+  padding: 0.58rem 1rem;
+  border: 1px solid #e5e8ef;
+  border-radius: 999px;
+  background: #f7f8fb;
+  font-size: 0.92rem;
+  color: #334361;
+  font-weight: 600;
+}
+
+.nav-row nav a.app-pill {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+.hero-grid {
+  margin-top: 1.1rem;
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr;
+  gap: 1rem;
+}
+
+.hero-left,
+.hero-right {
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.hero-left {
+  background: #f3f5f8;
+  border: 1px solid var(--line);
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.82rem;
+  color: #55678b;
+  font-weight: 800;
+}
+
+.hero-left h2 {
+  margin: 0.6rem 0 0;
+  font-size: clamp(2rem, 5vw, 4.1rem);
+  line-height: 0.98;
+  font-family: "Sora", "Manrope", sans-serif;
+}
+
+.hero-left p {
+  margin: 0.95rem 0 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.5;
+  max-width: 58ch;
+}
+
+.hero-actions {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.primary-btn,
+.secondary-btn {
+  border-radius: 0.92rem;
+  padding: 0.82rem 1.25rem;
+  font-weight: 800;
+  font-size: 0.96rem;
+}
+
+.primary-btn {
+  color: #fff;
+  background: var(--accent);
+}
+
+.secondary-btn {
+  border: 1px solid #c4cee0;
+  background: #f9fbff;
+  color: #273659;
+}
+
+.hero-right {
+  background: var(--navy);
+  color: #d9e5ff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.panel-title {
+  margin: 0 0 0.8rem;
+  font-size: 1.04rem;
+  color: #c2d2f8;
+}
+
+.stat-tile {
+  border: 1px solid rgba(160, 180, 230, 0.2);
+  background: var(--navy-soft);
+  border-radius: 1rem;
+  padding: 0.84rem 0.9rem;
+  margin-bottom: 0.72rem;
+}
+
+.stat-tile small {
+  display: block;
+  color: #b7c5e7;
+  font-size: 0.85rem;
+}
+
+.stat-tile strong {
+  display: block;
+  margin-top: 0.26rem;
+  color: #edf3ff;
+  font-size: 1.08rem;
+}
+
+.info-panel h3,
+.app-panel h3 {
+  margin: 0;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1;
+  font-family: "Sora", "Manrope", sans-serif;
+}
+
+.info-panel > p {
+  margin: 0.72rem 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.step-grid,
+.safety-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.step-grid article,
+.safety-grid article {
+  background: #f3f6fb;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 0.88rem;
+}
+
+.step-grid article span {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.75rem;
+  color: #60739b;
+  margin-bottom: 0.4rem;
+  font-weight: 800;
+}
+
+.step-grid h4,
+.safety-grid h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.step-grid p,
+.safety-grid p {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: 0.9rem;
+}
+
+.app-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.metric-row {
+  margin-top: 0.95rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.metric-row article {
+  background: #f5f8fc;
+  border: 1px solid var(--line);
+  border-radius: 0.95rem;
+  padding: 0.75rem;
+}
+
+.metric-row span {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #5f7298;
+  font-weight: 700;
+}
+
+.metric-row strong {
+  display: block;
+  margin-top: 0.34rem;
+  font-size: 0.93rem;
+  line-height: 1.35;
+}
+
+.app-grid {
+  margin-top: 0.9rem;
+  display: grid;
+  grid-template-columns: 1.03fr 1fr;
+  gap: 0.86rem;
+}
+
+.app-stack {
+  display: grid;
+  gap: 0.86rem;
+}
+
+.surface-card {
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 0.95rem;
+  background: #f8f9fc;
+}
+
+.surface-head h2 {
+  margin: 0;
+  font-size: 1.07rem;
+}
+
+.surface-head p {
+  margin: 0.32rem 0 0.85rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.order-form label {
+  display: block;
+  margin-bottom: 0.72rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.order-form input,
+.order-form select {
+  width: 100%;
+  margin-top: 0.36rem;
+  border: 1px solid #c5d0e4;
+  border-radius: 0.72rem;
+  background: #fff;
+  padding: 0.72rem 0.82rem;
+  color: var(--ink);
+}
+
+.order-form input:focus,
+.order-form select:focus {
+  outline: none;
+  border-color: #0f3f8a;
+  box-shadow: 0 0 0 3px rgba(24, 79, 168, 0.12);
+}
+
+.order-form button {
+  width: 100%;
+  border: 0;
+  border-radius: 0.8rem;
+  padding: 0.78rem;
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.order-form button:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.form-note {
+  margin: 0.7rem 0 0;
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+
+.portfolio-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-radius: 0.8rem;
+  padding: 0.7rem 0.8rem;
+  margin-bottom: 0.74rem;
+  border: 1px solid #cbd6ea;
+  background: #fff;
+}
+
+.portfolio-total span {
+  color: #5f7399;
+  font-size: 0.83rem;
+}
+
+.portfolio-total strong {
+  font-size: 1.1rem;
+}
+
+.ledger-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ledger-list li {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #d7deec;
+  border-radius: 0.7rem;
+  background: #fff;
+  padding: 0.62rem 0.7rem;
+}
+
+.empty-row {
+  justify-content: center;
+  color: var(--muted);
+}
+
+.liquidation.healthy {
+  border-color: #b6ebd1;
+  background: #eaf9f1;
+}
+
+.liquidation.danger {
+  border-color: #f1b2af;
+  background: #fff2f2;
+}
+
+.liquidation strong {
+  display: block;
+}
+
+.liquidation p {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.wallet-adapter-button-trigger {
+  background: var(--accent) !important;
+  border-radius: 999px !important;
+  padding: 0.65rem 1.1rem !important;
+  font-size: 0.9rem !important;
+  font-weight: 800 !important;
+}
+
+@media (max-width: 980px) {
+  .hero-grid,
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-grid,
+  .safety-grid,
+  .metric-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-shell {
+    width: calc(100% - 1rem);
+    margin: 0.6rem auto 1.6rem;
+  }
+
+  .top-panel,
+  .info-panel,
+  .app-panel {
+    border-radius: 1.2rem;
+    padding: 1rem;
+  }
+
+  .brand {
+    font-size: 1.8rem;
+  }
+
+  .nav-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .step-grid,
+  .safety-grid,
+  .metric-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-left h2 {
+    font-size: 2rem;
+  }
+}
