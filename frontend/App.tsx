@@ -28,6 +28,8 @@ interface SettledPnlItem {
 
 const PROGRAM_ID = new PublicKey((privatePerpsIdl as { address: string }).address);
 const DEFAULT_MXE_PROGRAM_ID = new PublicKey("ArciumLz8H8M5j4nD2ccnE9vrFica8FWHQrQQizxgxYk");
+const MARKET_STATE_SEED = new TextEncoder().encode("market-state");
+const TRADER_SEED = new TextEncoder().encode("trader");
 
 function AppBody(): ReactElement {
   const { connection } = useConnection();
@@ -38,6 +40,7 @@ function AppBody(): ReactElement {
   const [lastTradeVolume, setLastTradeVolume] = useState<string>("0");
   const [status, setStatus] = useState<string>("Connect wallet to submit encrypted orders");
   const [mxePublicKey, setMxePublicKey] = useState<Uint8Array>(new Uint8Array(32).fill(1));
+  const [marketAdmin, setMarketAdmin] = useState<string>("");
 
   const anchorWallet =
     wallet.publicKey && wallet.signTransaction && wallet.signAllTransactions
@@ -67,7 +70,7 @@ function AppBody(): ReactElement {
   }, [provider]);
 
   const marketStatePda = useMemo(
-    () => PublicKey.findProgramAddressSync([Buffer.from("market-state")], PROGRAM_ID)[0],
+    () => PublicKey.findProgramAddressSync([MARKET_STATE_SEED], PROGRAM_ID)[0],
     [],
   );
 
@@ -77,10 +80,17 @@ function AppBody(): ReactElement {
     }
 
     return PublicKey.findProgramAddressSync(
-      [Buffer.from("trader"), marketStatePda.toBuffer(), wallet.publicKey.toBuffer()],
+      [TRADER_SEED, marketStatePda.toBuffer(), wallet.publicKey.toBuffer()],
       PROGRAM_ID,
     )[0];
   }, [wallet.publicKey, marketStatePda]);
+  const isAdminWallet = useMemo(() => {
+    if (!wallet.publicKey || !marketAdmin) {
+      return false;
+    }
+
+    return wallet.publicKey.toBase58() === marketAdmin;
+  }, [marketAdmin, wallet.publicKey]);
 
   useEffect(() => {
     async function loadMxePublicKey(): Promise<void> {
@@ -98,6 +108,42 @@ function AppBody(): ReactElement {
 
     void loadMxePublicKey();
   }, [provider]);
+
+  useEffect(() => {
+    async function loadMarketAdmin(): Promise<void> {
+      if (!program) {
+        return;
+      }
+
+      try {
+        const marketState = await (program.account as any).marketState.fetch(marketStatePda);
+        setMarketAdmin(marketState.admin.toBase58());
+      } catch {
+        setMarketAdmin("");
+      }
+    }
+
+    void loadMarketAdmin();
+  }, [program, marketStatePda]);
+
+  useEffect(() => {
+    if (!wallet.publicKey) {
+      setStatus("Connect wallet to submit encrypted orders");
+      return;
+    }
+
+    if (!marketAdmin) {
+      setStatus("Waiting for market admin configuration...");
+      return;
+    }
+
+    if (!isAdminWallet) {
+      setStatus("Demo is admin-only. Connect the organizer wallet to trade.");
+      return;
+    }
+
+    setStatus("Admin wallet connected. Ready to submit encrypted orders.");
+  }, [isAdminWallet, marketAdmin, wallet.publicKey]);
 
   const refreshTraderState = useCallback(async (): Promise<void> => {
     if (!program || !traderAccountPda) {
@@ -126,6 +172,10 @@ function AppBody(): ReactElement {
   async function handleEncryptedSubmit(encryptedOrder: EncryptedOrder): Promise<void> {
     if (!provider || !program || !traderAccountPda || !wallet.publicKey) {
       setStatus("Connect wallet before submitting orders");
+      return;
+    }
+    if (!isAdminWallet) {
+      setStatus("Demo is admin-only. Connect the organizer wallet to trade.");
       return;
     }
 
@@ -293,12 +343,16 @@ function AppBody(): ReactElement {
               traderPubkey={wallet.publicKey?.toBase58() ?? "disconnected"}
               mxePublicKey={mxePublicKey}
               onEncryptedSubmit={handleEncryptedSubmit}
+              canSubmit={isAdminWallet}
             />
             <LiquidationWarning isUnderwater={isUnderwater} />
           </div>
           <Portfolio settledPnls={settledPnls} />
         </div>
       </section>
+      <footer className="site-disclaimer">
+        Demo disclaimer: ArcPerp is a Devnet prototype. Use a burner wallet and test funds only.
+      </footer>
     </main>
   );
 }

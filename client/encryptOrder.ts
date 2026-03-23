@@ -1,6 +1,5 @@
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
-import { RescueCipher, getMXEPublicKey, x25519 } from "@arcium-hq/client";
 
 export type OrderDirection = "long" | "short";
 
@@ -19,10 +18,23 @@ export interface EncryptedOrder {
   nonce: Uint8Array;
 }
 
+type ArciumClientModule = typeof import("@arcium-hq/client");
+
+let arciumClientModulePromise: Promise<ArciumClientModule> | null = null;
+
+async function loadArciumClient(): Promise<ArciumClientModule> {
+  if (!arciumClientModulePromise) {
+    arciumClientModulePromise = import("@arcium-hq/client");
+  }
+
+  return arciumClientModulePromise;
+}
+
 export async function resolveMxePublicKey(
   provider: AnchorProvider,
   mxeProgramId: PublicKey,
 ): Promise<Uint8Array> {
+  const { getMXEPublicKey } = await loadArciumClient();
   const mxePublicKey = await getMXEPublicKey(provider, mxeProgramId);
   if (!mxePublicKey) {
     throw new Error("MXE public key is not initialized on-chain");
@@ -34,6 +46,7 @@ export async function encryptOrder(
   input: EncryptOrderInput,
   mxePublicKey: Uint8Array,
 ): Promise<EncryptedOrder> {
+  const { RescueCipher, x25519 } = await loadArciumClient();
   const clientPrivateKey = x25519.utils.randomSecretKey();
   const clientPublicKey = x25519.getPublicKey(clientPrivateKey);
   const sharedSecret = x25519.getSharedSecret(clientPrivateKey, mxePublicKey);
