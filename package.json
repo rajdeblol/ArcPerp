@@ -1,0 +1,23 @@
+{
+  "name": "private_perps_workspace",
+  "private": true,
+  "scripts": {
+    "test": "ts-mocha -p ./tsconfig.json -t 1000000 tests/integration.ts"
+  },
+  "dependencies": {
+    "@arcium-hq/client": "0.9.2",
+    "@coral-xyz/anchor": "0.32.1"
+  },
+  "devDependencies": {
+    "@types/bn.js": "5.2.0",
+    "@types/chai": "5.2.2",
+    "@types/mocha": "10.0.10",
+    "@types/node": "24.5.2",
+    "chai": "4.5.0",
+    "mocha": "11.7.4",
+    "prettier": "3.6.2",
+    "ts-mocha": "11.1.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.2"
+  }
+}

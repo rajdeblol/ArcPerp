@@ -30,6 +30,11 @@ pub fn handler(ctx: Context<SubmitOrder>, encrypted_order_blob: Vec<u8>) -> Resu
 
     let market_state = &mut ctx.accounts.market_state;
     let trader_account = &mut ctx.accounts.trader_account;
+    require_keys_eq!(
+        ctx.accounts.trader.key(),
+        market_state.admin,
+        PrivatePerpsError::Unauthorized
+    );
 
     if trader_account.owner == Pubkey::default() {
         trader_account.owner = ctx.accounts.trader.key();

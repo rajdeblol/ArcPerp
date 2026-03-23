@@ -52,4 +52,6 @@ pub enum PrivatePerpsError {
     NotLiquidatable,
     #[msg("Encrypted payload exceeds configured limit.")]
     PayloadTooLarge,
+    #[msg("Unauthorized signer for this instruction.")]
+    Unauthorized,
 }

@@ -1,5 +1,12 @@
-import { RescueCipher, getMXEPublicKey, x25519 } from "@arcium-hq/client";
+let arciumClientModulePromise = null;
+async function loadArciumClient() {
+    if (!arciumClientModulePromise) {
+        arciumClientModulePromise = import("@arcium-hq/client");
+    }
+    return arciumClientModulePromise;
+}
 export async function resolveMxePublicKey(provider, mxeProgramId) {
+    const { getMXEPublicKey } = await loadArciumClient();
     const mxePublicKey = await getMXEPublicKey(provider, mxeProgramId);
     if (!mxePublicKey) {
         throw new Error("MXE public key is not initialized on-chain");
@@ -7,6 +14,7 @@ export async function resolveMxePublicKey(provider, mxeProgramId) {
     return mxePublicKey;
 }
 export async function encryptOrder(input, mxePublicKey) {
+    const { RescueCipher, x25519 } = await loadArciumClient();
     const clientPrivateKey = x25519.utils.randomSecretKey();
     const clientPublicKey = x25519.getPublicKey(clientPrivateKey);
     const sharedSecret = x25519.getSharedSecret(clientPrivateKey, mxePublicKey);

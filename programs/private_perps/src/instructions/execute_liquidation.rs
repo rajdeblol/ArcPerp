@@ -17,7 +17,10 @@ pub struct ExecuteLiquidation<'info> {
         bump = trader_account.bump
     )]
     pub trader_account: Account<'info, TraderAccount>,
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = vault_account.market == market_state.key() @ PrivatePerpsError::Unauthorized
+    )]
     pub vault_account: Account<'info, VaultAccount>,
 }
 
@@ -27,6 +30,11 @@ pub fn handler(
     mxe_proof: Vec<u8>,
 ) -> Result<()> {
     require!(!mxe_proof.is_empty(), PrivatePerpsError::InvalidMxeProof);
+    require_keys_eq!(
+        ctx.accounts.liquidator.key(),
+        ctx.accounts.market_state.admin,
+        PrivatePerpsError::Unauthorized
+    );
     require!(is_underwater, PrivatePerpsError::NotLiquidatable);
 
     let trader_account = &mut ctx.accounts.trader_account;

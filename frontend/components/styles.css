@@ -361,6 +361,11 @@ a {
   color: var(--muted);
 }
 
+.form-note-warning {
+  color: #b23d35;
+  font-weight: 700;
+}
+
 .portfolio-total {
   display: flex;
   justify-content: space-between;
@@ -429,6 +434,17 @@ a {
   padding: 0.65rem 1.1rem !important;
   font-size: 0.9rem !important;
   font-weight: 800 !important;
+}
+
+.site-disclaimer {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.18);
+  color: #d8e7df;
+  font-size: 0.85rem;
+  line-height: 1.45;
 }
 
 @media (max-width: 980px) {

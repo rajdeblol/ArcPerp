@@ -1,0 +1,580 @@
+{
+  "address": "Fc4GhUpsp7J9sGR8b94q1Hm6gZuqGvzRD345M7yNybHR",
+  "metadata": {
+    "name": "private_perps",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Private perpetuals DEX settlement program"
+  },
+  "instructions": [
+    {
+      "name": "execute_liquidation",
+      "discriminator": [
+        189,
+        55,
+        38,
+        121,
+        165,
+        84,
+        96,
+        124
+      ],
+      "accounts": [
+        {
+          "name": "liquidator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "market_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116,
+                  45,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "trader_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  97,
+                  100,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market_state"
+              },
+              {
+                "kind": "account",
+                "path": "trader_account.owner",
+                "account": "TraderAccount"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_account",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "is_underwater",
+          "type": "bool"
+        },
+        {
+          "name": "mxe_proof",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "initialize_mxe",
+      "discriminator": [
+        168,
+        149,
+        225,
+        129,
+        180,
+        32,
+        211,
+        229
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "market_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116,
+                  45,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "mxe_id",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "settle_fill",
+      "discriminator": [
+        197,
+        81,
+        135,
+        50,
+        191,
+        3,
+        171,
+        75
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "market_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116,
+                  45,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "trader_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  97,
+                  100,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market_state"
+              },
+              {
+                "kind": "account",
+                "path": "trader_account.owner",
+                "account": "TraderAccount"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_account",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "order_id",
+          "type": "u64"
+        },
+        {
+          "name": "decrypted_realized_pnl_tick",
+          "type": "i64"
+        },
+        {
+          "name": "mxe_proof",
+          "type": "bytes"
+        },
+        {
+          "name": "new_encrypted_position_commitment",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "submit_order",
+      "discriminator": [
+        230,
+        150,
+        200,
+        53,
+        92,
+        208,
+        109,
+        108
+      ],
+      "accounts": [
+        {
+          "name": "trader",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "market_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116,
+                  45,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "trader_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  97,
+                  100,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market_state"
+              },
+              {
+                "kind": "account",
+                "path": "trader"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "encrypted_order_blob",
+          "type": "bytes"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "MarketState",
+      "discriminator": [
+        0,
+        125,
+        123,
+        215,
+        95,
+        96,
+        164,
+        194
+      ]
+    },
+    {
+      "name": "TraderAccount",
+      "discriminator": [
+        111,
+        222,
+        42,
+        107,
+        177,
+        76,
+        38,
+        149
+      ]
+    },
+    {
+      "name": "VaultAccount",
+      "discriminator": [
+        230,
+        251,
+        241,
+        83,
+        139,
+        202,
+        93,
+        28
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "FillSettled",
+      "discriminator": [
+        47,
+        107,
+        42,
+        146,
+        115,
+        71,
+        20,
+        119
+      ]
+    },
+    {
+      "name": "OrderSubmitted",
+      "discriminator": [
+        234,
+        9,
+        195,
+        214,
+        22,
+        135,
+        46,
+        248
+      ]
+    },
+    {
+      "name": "TraderLiquidated",
+      "discriminator": [
+        210,
+        94,
+        11,
+        99,
+        207,
+        232,
+        203,
+        8
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidMxeProof",
+      "msg": "Invalid MXE proof payload."
+    },
+    {
+      "code": 6001,
+      "name": "NotLiquidatable",
+      "msg": "Liquidation check did not signal underwater position."
+    },
+    {
+      "code": 6002,
+      "name": "PayloadTooLarge",
+      "msg": "Encrypted payload exceeds configured limit."
+    }
+  ],
+  "types": [
+    {
+      "name": "FillSettled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "order_id",
+            "type": "u64"
+          },
+          {
+            "name": "trader",
+            "type": "pubkey"
+          },
+          {
+            "name": "realized_pnl_tick",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MarketState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "mxe_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "next_order_id",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OrderSubmitted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "order_id",
+            "type": "u64"
+          },
+          {
+            "name": "trader",
+            "type": "pubkey"
+          },
+          {
+            "name": "market",
+            "type": "pubkey"
+          },
+          {
+            "name": "encrypted_order_blob",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TraderAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "market",
+            "type": "pubkey"
+          },
+          {
+            "name": "encrypted_position_commitment",
+            "type": "bytes"
+          },
+          {
+            "name": "realized_pnl_tick",
+            "type": "i64"
+          },
+          {
+            "name": "is_liquidated",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TraderLiquidated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "trader",
+            "type": "pubkey"
+          },
+          {
+            "name": "market",
+            "type": "pubkey"
+          },
+          {
+            "name": "redistributed_collateral",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "market",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority_bump",
+            "type": "u8"
+          },
+          {
+            "name": "collateral_pool",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}
