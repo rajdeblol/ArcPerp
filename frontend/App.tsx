@@ -38,6 +38,8 @@ const DEFAULT_MXE_PROGRAM_ID = new PublicKey("ArciumLz8H8M5j4nD2ccnE9vrFica8FWHQ
 const MARKET_STATE_SEED = new TextEncoder().encode("market-state");
 const TRADER_SEED = new TextEncoder().encode("trader");
 const DEVNET_EXPLORER_BASE = "https://explorer.solana.com/tx";
+const ENV_MXE_PUBLIC_KEY = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env
+  ?.VITE_MXE_PUBLIC_KEY;
 
 function AppBody(): ReactElement {
   const { connection } = useConnection();
@@ -47,7 +49,7 @@ function AppBody(): ReactElement {
   const [lastTradePrice, setLastTradePrice] = useState<string>("Hidden");
   const [lastTradeVolume, setLastTradeVolume] = useState<string>("0");
   const [status, setStatus] = useState<string>("Connect wallet to submit encrypted orders");
-  const [mxePublicKey, setMxePublicKey] = useState<Uint8Array>(new Uint8Array(32).fill(1));
+  const [mxePublicKey, setMxePublicKey] = useState<Uint8Array | null>(null);
   const [marketAdmin, setMarketAdmin] = useState<string>("");
   const [recentSubmissions, setRecentSubmissions] = useState<RecentSubmissionItem[]>([]);
 
@@ -100,6 +102,7 @@ function AppBody(): ReactElement {
 
     return wallet.publicKey.toBase58() === marketAdmin;
   }, [marketAdmin, wallet.publicKey]);
+  const hasMxeKey = useMemo(() => Boolean(mxePublicKey), [mxePublicKey]);
 
   useEffect(() => {
     async function loadMxePublicKey(): Promise<void> {
@@ -110,8 +113,19 @@ function AppBody(): ReactElement {
       try {
         const key = await resolveMxePublicKey(provider, DEFAULT_MXE_PROGRAM_ID);
         setMxePublicKey(key);
+        return;
       } catch {
-        setStatus("MXE key unavailable; using placeholder key until MXE is initialized");
+        if (ENV_MXE_PUBLIC_KEY) {
+          try {
+            const envKey = new PublicKey(ENV_MXE_PUBLIC_KEY).toBytes();
+            setMxePublicKey(envKey);
+            return;
+          } catch {
+            setMxePublicKey(null);
+          }
+        } else {
+          setMxePublicKey(null);
+        }
       }
     }
 
@@ -141,6 +155,11 @@ function AppBody(): ReactElement {
       return;
     }
 
+    if (!hasMxeKey) {
+      setStatus("MXE key unavailable. Set VITE_MXE_PUBLIC_KEY or initialize MXE on devnet.");
+      return;
+    }
+
     if (!marketAdmin) {
       setStatus("Waiting for market admin configuration...");
       return;
@@ -152,7 +171,7 @@ function AppBody(): ReactElement {
     }
 
     setStatus("Wallet connected. Submit is enabled; non-admin orders will be rejected on-chain.");
-  }, [isAdminWallet, marketAdmin, wallet.publicKey]);
+  }, [hasMxeKey, isAdminWallet, marketAdmin, wallet.publicKey]);
 
   const refreshTraderState = useCallback(async (): Promise<void> => {
     if (!program || !traderAccountPda) {
@@ -179,7 +198,7 @@ function AppBody(): ReactElement {
   }, [refreshTraderState]);
 
   async function handleEncryptedSubmit(encryptedOrder: EncryptedOrder): Promise<void> {
-    if (!provider || !program || !traderAccountPda || !wallet.publicKey) {
+    if (!provider || !program || !traderAccountPda || !wallet.publicKey || !mxePublicKey) {
       setStatus("Connect wallet before submitting orders");
       return;
     }
@@ -390,10 +409,14 @@ function AppBody(): ReactElement {
           <div className="app-stack">
             <OrderForm
               traderPubkey={wallet.publicKey?.toBase58() ?? "disconnected"}
-              mxePublicKey={mxePublicKey}
+              mxePublicKey={mxePublicKey ?? new Uint8Array(32)}
               onEncryptedSubmit={handleEncryptedSubmit}
-              canSubmit={Boolean(wallet.publicKey)}
-              disabledReason="Connect wallet to submit encrypted orders."
+              canSubmit={Boolean(wallet.publicKey) && hasMxeKey}
+              disabledReason={
+                !wallet.publicKey
+                  ? "Connect wallet to submit encrypted orders."
+                  : "MXE key missing. Set VITE_MXE_PUBLIC_KEY or initialize MXE."
+              }
             />
             <LiquidationWarning isUnderwater={isUnderwater} />
           </div>
