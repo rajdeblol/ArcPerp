@@ -303,6 +303,67 @@ a {
   line-height: 1.35;
 }
 
+.explorer-card {
+  margin-top: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 0.95rem;
+  background: #f7f9fc;
+  padding: 0.82rem;
+}
+
+.explorer-head h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.explorer-head p {
+  margin: 0.3rem 0 0.55rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.explorer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.explorer-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  border: 1px solid #d7deec;
+  border-radius: 0.72rem;
+  background: #fff;
+  padding: 0.58rem 0.7rem;
+}
+
+.explorer-list span {
+  font-weight: 700;
+  color: #253659;
+}
+
+.explorer-list span small {
+  margin-left: 0.45rem;
+  color: #61759d;
+  font-weight: 600;
+}
+
+.explorer-list a {
+  font-weight: 800;
+  color: #0f3f8a;
+  white-space: nowrap;
+}
+
+.explorer-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
 .app-grid {
   margin-top: 0.9rem;
   display: grid;
@@ -512,6 +573,11 @@ a {
   .safety-grid,
   .metric-row {
     grid-template-columns: 1fr;
+  }
+
+  .explorer-list li {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .hero-left h2 {

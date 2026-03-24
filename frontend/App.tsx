@@ -27,10 +27,17 @@ interface SettledPnlItem {
   pnlTick: string;
 }
 
+interface RecentSubmissionItem {
+  orderId: string;
+  txSig: string;
+  submittedAt: string;
+}
+
 const PROGRAM_ID = new PublicKey((privatePerpsIdl as { address: string }).address);
 const DEFAULT_MXE_PROGRAM_ID = new PublicKey("ArciumLz8H8M5j4nD2ccnE9vrFica8FWHQrQQizxgxYk");
 const MARKET_STATE_SEED = new TextEncoder().encode("market-state");
 const TRADER_SEED = new TextEncoder().encode("trader");
+const DEVNET_EXPLORER_BASE = "https://explorer.solana.com/tx";
 
 function AppBody(): ReactElement {
   const { connection } = useConnection();
@@ -42,6 +49,7 @@ function AppBody(): ReactElement {
   const [status, setStatus] = useState<string>("Connect wallet to submit encrypted orders");
   const [mxePublicKey, setMxePublicKey] = useState<Uint8Array>(new Uint8Array(32).fill(1));
   const [marketAdmin, setMarketAdmin] = useState<string>("");
+  const [recentSubmissions, setRecentSubmissions] = useState<RecentSubmissionItem[]>([]);
 
   const anchorWallet =
     wallet.publicKey && wallet.signTransaction && wallet.signAllTransactions
@@ -185,10 +193,17 @@ function AppBody(): ReactElement {
         traderAccountPda,
         encryptedOrder,
       );
+      const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
       setStatus(`Submitted order #${orderId.toString()} (${txSig.slice(0, 8)}...)`);
       setLastTradeVolume((prev) => (Number(prev || "0") + 1).toString());
       setLastTradePrice("Hidden");
+      setRecentSubmissions((prev) =>
+        [
+          { orderId: orderId.toString(), txSig, submittedAt: timestamp },
+          ...prev,
+        ].slice(0, 5),
+      );
       await refreshTraderState();
     } catch (error) {
       setStatus(`Order submission failed: ${String(error)}`);
@@ -341,6 +356,34 @@ function AppBody(): ReactElement {
             <span>Program</span>
             <strong>{PROGRAM_ID.toBase58().slice(0, 12)}...</strong>
           </article>
+        </div>
+        <div className="explorer-card">
+          <div className="explorer-head">
+            <h4>Verify On Explorer</h4>
+            <p>Open Devnet transaction receipts to confirm encrypted order placement.</p>
+          </div>
+          {recentSubmissions.length > 0 ? (
+            <ul className="explorer-list">
+              {recentSubmissions.map((item) => (
+                <li key={`${item.orderId}-${item.txSig}`}>
+                  <span>
+                    Order #{item.orderId} <small>{item.submittedAt}</small>
+                  </span>
+                  <a
+                    href={`${DEVNET_EXPLORER_BASE}/${item.txSig}?cluster=devnet`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View Tx
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="explorer-empty">
+              No submissions yet. Place an order and this panel will show a direct Explorer link.
+            </p>
+          )}
         </div>
 
         <div className="app-grid">
